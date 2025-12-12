@@ -40,6 +40,22 @@ namespace Storage.Controllers
             return View(await model.ToListAsync());
         }
 
+        public async Task<IActionResult> Search(string category)
+        {
+            if (!string.IsNullOrEmpty(category))
+            {
+                var filtered = await _context.Product.Where(e => e.Category == category)
+                    .ToListAsync();
+
+                return View(nameof(Index), filtered);
+            }
+            else
+            {
+                var allProducts = await _context.Product.ToListAsync();
+                return View("Index", allProducts);
+            }
+            }
+
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -8,6 +8,12 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+    <form asp-controller="Products" asp-action="Search">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="category" placeholder="Search for category" />
+            <button class="btn btn-primary mt-2" type="submit">Search</button>
+        </div>
+    </form>
 </p>
 <table class="table">
     <thead>
