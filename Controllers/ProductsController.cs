@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Storage.Controllers
 {
@@ -23,6 +24,20 @@ namespace Storage.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Product.ToListAsync());
+        }
+        public async Task<IActionResult> Inventory()
+        {
+            var model = _context.Product.Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = (int)p.Price,
+                    Count = p.Count,
+                    InventoryValue = (int)(p.Price * p.Count)
+                });
+
+            ViewBag.TotalInventoryValue = model.Sum(x => x.InventoryValue);
+            return View(await model.ToListAsync());
         }
 
         // GET: Products/Details/5
