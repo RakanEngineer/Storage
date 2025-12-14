@@ -40,7 +40,7 @@ namespace Storage.Controllers
             return View(await model.ToListAsync());
         }
 
-        public async Task<IActionResult> Search(string category)
+        public async Task<IActionResult> FilterByCategory(string category)
         {
             if (!string.IsNullOrEmpty(category))
             {
@@ -54,7 +54,37 @@ namespace Storage.Controllers
                 var allProducts = await _context.Product.ToListAsync();
                 return View("Index", allProducts);
             }
-            }
+        }
+        public async Task<IActionResult> Search(string? category, string? searchName)
+        {
+            var categories = await _context.Product
+                .Select(p => p.Category)
+                .Distinct()
+                .ToListAsync();
+
+            var query = _context.Product.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+                query = query.Where(p => p.Category == category);
+
+            if (!string.IsNullOrEmpty(searchName))
+                query = query.Where(p => p.Name.Contains(searchName));
+
+            var model = new ProductSearchViewModel
+            {
+                Category = category,
+                SearchName = searchName,
+                Categories = categories.Select(c => new SelectListItem
+                {
+                    Text = c,
+                    Value = c,
+                    Selected = c == category
+                }),
+                Products = await query.ToListAsync()
+            };
+
+            return View(nameof(Search),model);
+        }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)

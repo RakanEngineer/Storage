@@ -1,0 +1,47 @@
+﻿@model ProductSearchViewModel
+
+@{
+    ViewData["Title"] = "Product Search";
+}
+
+<h2>Produktfilter</h2>
+
+<form asp-controller="Products" asp-action="Search" method="get" class="row mb-4">
+
+    <div class="col-md-3">
+        <select asp-for="Category" asp-items="Model.Categories" class="form-control">
+            <option value="">All Categories</option>
+        </select>
+    </div>
+
+    <div class="col-md-5">
+        <input asp-for="SearchName" class="form-control" placeholder="Search for product..." />
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+
+</form>
+
+<table class="table table-bordered table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Products)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Category</td>
+                <td>@p.Price</td>
+                <td>@p.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>
